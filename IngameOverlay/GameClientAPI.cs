@@ -14,7 +14,7 @@ namespace IngameOverlay
         private List<Event> before { get; set; } = new List<Event>();
         public List<Event> Events { get; set; } = new List<Event>();
         public event OnEventOccured onEventOccured;
-        public delegate void OnEventOccured(EventArgs e);
+        public delegate void OnEventOccured(EventsArgs events);
 
         public GameClientAPI()
         {
@@ -29,21 +29,21 @@ namespace IngameOverlay
                 {
                     if (Process.GetProcessesByName("League of Legends").Length > 0)
                     {
-                            var events = await GetEventsAsync();
-                            IEnumerable<Event> results = events.Except(before, new EventCompereer());
-                            foreach (var value in results)
+                        var events = await GetEventsAsync();
+                        IEnumerable<Event> results = events.Except(before, new EventCompereer());
+                        foreach (var value in results)
+                        {
+                            //Console.WriteLine(value.ToString());
+                            if (value.EventName.Equals("GameEnd"))
                             {
-                                //Console.WriteLine(value.ToString());
-                                if (value.EventName.Equals("GameEnd"))
-                                {
-                                    isgameend = false;
-                                }
+                                isgameend = false;
                             }
-                            before = events;
-                            if (results.Count() != 0)
-                            {
-                                 this.Events = (List<Event>)results;
-                            }
+                        }
+                        before = events;
+                        if (results.Count() != 0)
+                        {
+                            onEventOccured(new EventsArgs((List<Event>)results));
+                        }
                     }
                     else
                     {
@@ -78,6 +78,15 @@ namespace IngameOverlay
         private string format(string message)
         {
             return "[" + System.DateTime.Now.ToString("HH:mm:ss") + "] " + message;
+        }
+
+        public class EventsArgs : EventArgs
+        {
+            public List<Event> events { get; set; }
+            public EventsArgs(List<Event> e)
+            {
+                this.events = e;
+            }
         }
     }
 }

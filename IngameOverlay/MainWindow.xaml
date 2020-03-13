@@ -7,8 +7,8 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" WindowStyle="None" AllowsTransparency="True" Background="Transparent" WindowState="Maximized" Topmost="True">
     <Grid>
-        <Image x:Name="BlueInhibitor" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="390" Source="./Resource/blueinhibitor.png" Margin="0,0,0,430"/>
-        <Image x:Name="RedInhibitor" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="390" Source="./Resource/redinhibitor.png" Margin="0,0,0,316"/>
+        <Image x:Name="BlueInhibitor" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="294" Source="./Resource/blueinhibitor.png" Margin="0,0,0,351"/>
+        <Image x:Name="RedInhibitor" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="294" Source="./Resource/redinhibitor.png" Margin="0,0,0,265"/>
 
     </Grid>
 </Window>
