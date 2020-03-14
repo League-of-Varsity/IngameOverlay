@@ -1,0 +1,16 @@
+﻿<Window x:Class="IngameOverlay.ConsoleWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:IngameOverlay"
+        xmlns:vm="clr-namespace:IngameOverlay.ViewModel"
+        mc:Ignorable="d"
+        Title="IngameOverlay" Height="400" Width="300" Closed="Window_Closed" Initialized="Window_Initialized" FontSize="14" FontFamily="Consolas" Background="White" WindowStyle="ToolWindow">
+    <Window.DataContext>
+        <vm:ConsoleViewModel />
+    </Window.DataContext>
+    <Grid>
+        <ListView x:Name="ConsoleBox" ItemsSource="{Binding consoleLog}" ScrollViewer.VerticalScrollBarVisibility="Disabled" ClipToBounds="True" BorderThickness="0,0,0,0"/>
+    </Grid>
+</Window>

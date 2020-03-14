@@ -8,7 +8,7 @@ namespace IngameOverlay
     /// <summary>
     /// OverlayWindow.xaml の相互作用ロジック
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class OverlayWindow : Window
     {
 
         protected const int GWL_EXSTYLE = (-20);
