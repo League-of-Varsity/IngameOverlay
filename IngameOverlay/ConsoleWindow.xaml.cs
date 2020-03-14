@@ -60,7 +60,8 @@ namespace IngameOverlay
             var listview = this.ConsoleBox;
             if (listview.Items.Count > 10)
             {
-                listview.ScrollIntoView(listview.Items[listview.Items.Count - 1]);
+                listview.Items.MoveCurrentToLast();
+                listview.ScrollIntoView(listview.Items.CurrentItem);
             }
         }
 

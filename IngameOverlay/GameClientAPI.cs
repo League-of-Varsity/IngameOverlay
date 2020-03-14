@@ -30,14 +30,14 @@ namespace IngameOverlay
                     }
                     else
                     {
-                        onMessageRecieved(new MessageEventArgs("Waiting for LoL starts."));
+                        onMessageRecieved(new MessageEventArgs(format("Waiting for LoL ends.")));
                         await Task.Delay(5000);
                     }
                 }
                 else
                 {
                     isGameend = false;
-                    onMessageRecieved(new MessageEventArgs("Waiting for LoL starts."));
+                    onMessageRecieved(new MessageEventArgs(format("Waiting for LoL starts.")));
                     await Task.Delay(5000);
                 }
             }
@@ -54,6 +54,10 @@ namespace IngameOverlay
                     this.Events.Add(value);
                     onEventOccured(new EventsArgs(value));
                 }
+            }
+            else
+            {
+                onMessageRecieved(new MessageEventArgs(format("Now loading.")));
             }
         }
 
@@ -94,6 +98,10 @@ namespace IngameOverlay
             {
                 this.message = message;
             }
+        }
+        private string format(string message)
+        {
+            return "[Info] " + message;
         }
     }
 }
