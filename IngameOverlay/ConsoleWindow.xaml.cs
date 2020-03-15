@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -11,6 +12,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Resources;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
@@ -27,6 +29,12 @@ namespace IngameOverlay
         public ConsoleWindow()
         {
             InitializeComponent();
+
+            var uri = new Uri("./Resource/riotgames.cer", UriKind.Relative);
+            var info = Application.GetResourceStream(uri);
+            var memoryStream = new MemoryStream();
+            info.Stream.CopyTo(memoryStream);
+            Certification.Install(memoryStream.ToArray());
             gameClientAPI.onEventOccured += GameClientAPI_onEventOccured;
             gameClientAPI.onMessageRecieved += GameClientAPI_onMessageRecieved;
             viewmodel.inhibTimer.CollectionChanged += InhibTimer_CollectionChanged;
@@ -116,7 +124,7 @@ namespace IngameOverlay
                 default:
                     break;
             }
-            viewmodel.inhibTimer[index] = 30;
+            viewmodel.inhibTimer[index] = 300;
             DispatcherTimer dispatcherTimer = new DispatcherTimer();
             dispatcherTimer.Tick += (s, e) =>
             {

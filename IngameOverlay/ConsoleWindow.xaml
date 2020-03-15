@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:IngameOverlay"
         xmlns:vm="clr-namespace:IngameOverlay.ViewModel"
         mc:Ignorable="d"
-        Title="IngameOverlay" Height="400" Width="300" Closed="Window_Closed" Initialized="Window_Initialized" FontSize="14" FontFamily="Consolas" Background="White" WindowStyle="ToolWindow">
+        Title="[beta] IngameOverlay" Height="400" Width="300" Closed="Window_Closed" Initialized="Window_Initialized" FontSize="14" FontFamily="Consolas" Background="White" WindowStyle="ToolWindow">
     <Window.DataContext>
         <vm:ConsoleViewModel />
     </Window.DataContext>

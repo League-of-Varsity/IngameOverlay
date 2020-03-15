@@ -4,11 +4,14 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <PublishSingleFile>true</PublishSingleFile>
+    <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Resource\blueinhibitor.png" />
     <None Remove="Resource\redinhibitor.png" />
+    <None Remove="Resource\riotgames.cer" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,6 +20,7 @@
 
   <ItemGroup>
     <Resource Include="Resource\blueinhibitor.png" />
+    <Resource Include="Resource\riotgames.cer" />
   </ItemGroup>
 
 </Project>
