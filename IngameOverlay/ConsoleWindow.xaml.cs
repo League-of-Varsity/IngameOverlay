@@ -151,10 +151,7 @@ namespace IngameOverlay
 
         private void onGameEnd()
         {
-            gameClientAPI.isGameend = true;
-            gameClientAPI.Events.Clear();
             viewmodel.consoleLog.Clear();
-            viewmodel.consoleLog.Add("Events cleared.");
             foreach (var item in timer)
             {
                 item.Stop();
