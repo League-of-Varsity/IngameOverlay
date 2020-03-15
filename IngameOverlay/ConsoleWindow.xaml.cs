@@ -25,6 +25,7 @@ namespace IngameOverlay
     {
         private OverlayWindow overlay;
         private ViewModel.ConsoleViewModel viewmodel;
+        private List<DispatcherTimer> timer = new List<DispatcherTimer>() { new DispatcherTimer(), new DispatcherTimer(), new DispatcherTimer(), new DispatcherTimer(), new DispatcherTimer(), new DispatcherTimer() };
         public GameClientAPI gameClientAPI { get; set; } = new GameClientAPI();
         public ConsoleWindow()
         {
@@ -125,13 +126,12 @@ namespace IngameOverlay
                     break;
             }
             viewmodel.inhibTimer[index] = 300;
-            DispatcherTimer dispatcherTimer = new DispatcherTimer();
-            dispatcherTimer.Tick += (s, e) =>
+            timer[index].Tick += (s, e) =>
             {
                 viewmodel.inhibTimer[index]--;
                 if (viewmodel.inhibTimer[index] < 0)
                 {
-                    dispatcherTimer.Stop();
+                    timer[index].Stop();
                     var team = index < 3 ? 0 : 1;
                     if(team == 0)
                     {
@@ -145,15 +145,28 @@ namespace IngameOverlay
                     }
                 }
             };
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
-            dispatcherTimer.Start();
+            timer[index].Interval = new TimeSpan(0, 0, 1);
+            timer[index].Start();
         }
 
         private void onGameEnd()
         {
             gameClientAPI.isGameend = true;
             gameClientAPI.Events.Clear();
-            viewmodel.consoleLog.Add("Game ended.");
+            viewmodel.consoleLog.Clear();
+            viewmodel.consoleLog.Add("Events cleared.");
+            foreach (var item in timer)
+            {
+                item.Stop();
+            }
+            for (int i = 0; i < overlay.viewmodel.inhibTimer.Count; i++)
+            {
+                overlay.viewmodel.inhibTimer[i] = "";
+            }
+            for (int i = 0; i < overlay.viewmodel.isTimerShowed.Count; i++)
+            {
+                overlay.viewmodel.isTimerShowed[i] = false;
+            }
         }
     }
 }
