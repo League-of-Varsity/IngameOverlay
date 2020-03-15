@@ -7,9 +7,10 @@ namespace IngameOverlay.ViewModel
     public class ConsoleViewModel
     {
         public ObservableCollection<string> consoleLog { get; set; } = new ObservableCollection<string>();
-        public ObservableCollection<int> inhibTimer { get; set; } = new ObservableCollection<int>() { -1,-1,-1,-1,-1,-1 };
+        public List<ObjectTimer> timer = new List<ObjectTimer>() { new ObjectTimer(0), new ObjectTimer(1), new ObjectTimer(2), new ObjectTimer(3), new ObjectTimer(4), new ObjectTimer(5) };
         public ConsoleViewModel()
         {
+
         }
     }
 }

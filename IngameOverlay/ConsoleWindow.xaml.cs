@@ -27,7 +27,6 @@ namespace IngameOverlay
     {
         private OverlayWindow overlay;
         private ViewModel.ConsoleViewModel viewmodel;
-        private List<DispatcherTimer> timer = new List<DispatcherTimer>() { new DispatcherTimer(), new DispatcherTimer(), new DispatcherTimer(), new DispatcherTimer(), new DispatcherTimer(), new DispatcherTimer() };
         public GameClientAPI gameClientAPI { get; set; } = new GameClientAPI();
         public ConsoleWindow()
         {
@@ -40,7 +39,6 @@ namespace IngameOverlay
             Certification.Install(memoryStream.ToArray());
             gameClientAPI.onEventOccured += GameClientAPI_onEventOccured;
             gameClientAPI.onMessageRecieved += GameClientAPI_onMessageRecieved;
-            viewmodel.inhibTimer.CollectionChanged += InhibTimer_CollectionChanged;
             viewmodel.consoleLog.CollectionChanged += ConsoleLog_CollectionChanged;
             gameClientAPI.StartAsync();
         }
@@ -50,6 +48,11 @@ namespace IngameOverlay
             viewmodel = (ViewModel.ConsoleViewModel)this.DataContext;
             overlay = new OverlayWindow();
             overlay.Show();
+            viewmodel.timer.ForEach((element) =>
+            {
+                element.onTicked += ConsoleWindow_onTicked;
+                element.onTimerEnd += ConsoleWindow_onTimerEnd;
+            });
             viewmodel.consoleLog.Add("Program started successfully!");
         }
 
@@ -75,19 +78,9 @@ namespace IngameOverlay
                 IScrollProvider scrollInterface = (IScrollProvider)svAutomation.GetPattern(PatternInterface.Scroll);
                 System.Windows.Automation.ScrollAmount scrollVertical = System.Windows.Automation.ScrollAmount.LargeIncrement;
                 System.Windows.Automation.ScrollAmount scrollHorizontal = System.Windows.Automation.ScrollAmount.NoAmount;
-                //If the vertical scroller is not available, the operation cannot be performed, which will raise an exception. 
                 if (scrollInterface.VerticallyScrollable)
                     scrollInterface.Scroll(scrollHorizontal, scrollVertical);
             }
-        }
-
-        private void InhibTimer_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            var team = e.NewStartingIndex < 3 ? 0 : 1;
-            overlay.viewmodel.isTimerShowed[team] = true;
-            var collection = (ObservableCollection<int>)sender;
-            var span = new TimeSpan(0, 0, collection[e.NewStartingIndex]);
-            overlay.viewmodel.inhibTimer[e.NewStartingIndex] = collection[e.NewStartingIndex] >= 0 ? span.ToString(@"m\:ss") : "";
         }
 
         private void GameClientAPI_onEventOccured(GameClientAPI.EventsArgs events)
@@ -132,43 +125,40 @@ namespace IngameOverlay
                 default:
                     break;
             }
-            viewmodel.inhibTimer[index] = 300;
-            timer[index].Tick += (s, e) =>
-            {
-                viewmodel.inhibTimer[index]--;
-                if (viewmodel.inhibTimer[index] < 0)
-                {
-                    timer[index].Stop();
-                    var team = index < 3 ? 0 : 1;
-                    if(team == 0)
-                    {
-                        var array = new int[3] { viewmodel.inhibTimer[0], viewmodel.inhibTimer[1], viewmodel.inhibTimer[2] };
-                        overlay.viewmodel.isTimerShowed[team] = array.Sum() == -3 ? false : true;
-                    }
-                    else
-                    {
-                        var array = new int[3] { viewmodel.inhibTimer[3], viewmodel.inhibTimer[4], viewmodel.inhibTimer[5] };
-                        overlay.viewmodel.isTimerShowed[team] = array.Sum() == -3 ? false : true;
-                    }
-                }
-            };
-            timer[index].Interval = new TimeSpan(0, 0, 1);
-            timer[index].Start();
+            viewmodel.timer[index].Start();
         }
 
         private void onGameEnd()
         {
-            foreach (var item in timer)
-            {
+            foreach (var item in viewmodel.timer)
                 item.Stop();
-            }
             for (int i = 0; i < overlay.viewmodel.inhibTimer.Count; i++)
-            {
                 overlay.viewmodel.inhibTimer[i] = "";
-            }
             for (int i = 0; i < overlay.viewmodel.isTimerShowed.Count; i++)
-            {
                 overlay.viewmodel.isTimerShowed[i] = false;
+        }
+
+        private void ConsoleWindow_onTicked(ObjectTimer sender, EventArgs args)
+        {
+            var team = sender.id < 3 ? 0 : 1;
+            overlay.viewmodel.isTimerShowed[team] = true;
+            var span = new TimeSpan(0, 0, sender.leftTime);
+            overlay.viewmodel.inhibTimer[sender.id] = sender.leftTime >= 0 ? span.ToString(@"m\:ss") : "";
+        }
+
+        private void ConsoleWindow_onTimerEnd(ObjectTimer sender, EventArgs args)
+        {
+            sender.Stop();
+            var team = sender.id < 3 ? 0 : 1;
+            if (team == 0)
+            {
+                var array = new int[3] { viewmodel.timer[0].leftTime, viewmodel.timer[1].leftTime, viewmodel.timer[2].leftTime };
+                overlay.viewmodel.isTimerShowed[team] = array.Sum() == -3 ? false : true;
+            }
+            else
+            {
+                var array = new int[3] { viewmodel.timer[3].leftTime, viewmodel.timer[4].leftTime, viewmodel.timer[5].leftTime };
+                overlay.viewmodel.isTimerShowed[team] = array.Sum() == -3 ? false : true;
             }
         }
     }
