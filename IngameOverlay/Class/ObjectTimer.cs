@@ -36,20 +36,16 @@ namespace IngameOverlay
         private void Timer_Tick(object sender, EventArgs e)
         {
             if (leftTime-- < 0)
-            {
-                timer.Stop();
                 onTimerEnd(this, e);
-            }
             else
-            {
                 onTicked(this, e);
-            }
         }
 
         public void Start()
         {
             leftTime = respawnTime;
             timer.Start();
+            onTicked(this, new EventArgs());
         }
 
         public void Stop()

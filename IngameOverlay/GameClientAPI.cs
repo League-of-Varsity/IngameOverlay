@@ -38,6 +38,7 @@ namespace IngameOverlay
                 {
                     if (this.Events.Count != 0)
                     {
+                        onEventOccured(new EventsArgs(new Event() { EventID = 0, EventTime = 0, EventName = "GameEnd" }));
                         this.Events.Clear();
                         onMessageRecieved(new MessageEventArgs(format("All events cleared.")));
                         isGameend = false;
