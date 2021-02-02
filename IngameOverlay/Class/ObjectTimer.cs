@@ -17,7 +17,7 @@ namespace IngameOverlay
         public delegate void OnTimerEnd(ObjectTimer sender, EventArgs args);
         public ObjectTimer(int id)
         {
-            timer = new DispatcherTimer();
+            timer = new DispatcherTimer(DispatcherPriority.Send);
             this.id = id;
             respawnTime = 300;
             timer.Interval = new TimeSpan(0, 0, 1);
